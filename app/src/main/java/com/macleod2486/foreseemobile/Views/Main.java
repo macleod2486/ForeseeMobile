@@ -20,19 +20,49 @@ package com.macleod2486.foreseemobile.Views;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.TextView;
 
 import com.macleod2486.foreseemobile.R;
 
 public class Main extends Fragment
 {
+    private Button searchButton;
+    private TextView searchText;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
         View view = inflater.inflate(R.layout.main, container, false);
 
+        searchButton = (Button)view.findViewById(R.id.searchButton);
+        searchText = (TextView)view.findViewById(R.id.search);
+
+        searchButton.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View view)
+            {
+                searchForCard(searchText.getText().toString());
+            }
+        });
+
         return view;
+    }
+
+    @Override
+    public void onCreate(Bundle instance)
+    {
+        super.onCreate(instance);
+    }
+
+    private void searchForCard(String text)
+    {
+        //Do a search for the card.
+        Log.i("Main","Entered: "+text);
     }
 }
