@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">ForeseeMobile</string>
+    <string name ="drawer_open">Menu</string>
+    <string name="drawer_close">ForeseeMobile</string>
+    <string-array
+        name = "menu">
+        <item>Search</item>
+    </string-array>
 </resources>
