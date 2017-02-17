@@ -28,6 +28,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.macleod2486.foreseemobile.R;
+import com.macleod2486.foreseemobile.Tools.CardFinder;
 
 public class Main extends Fragment
 {
@@ -64,5 +65,9 @@ public class Main extends Fragment
     {
         //Do a search for the card.
         Log.i("Main","Entered: "+text);
+
+        CardFinder finder = new CardFinder(getContext());
+        finder.getCardInfo(text);
+
     }
 }
