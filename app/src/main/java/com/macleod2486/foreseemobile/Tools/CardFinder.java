@@ -25,6 +25,7 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 
@@ -35,10 +36,40 @@ import java.net.URLEncoder;
 public class CardFinder
 {
     Context applicationContext;
+    Response.Listener<JSONArray> jsonListener;
+    Response.ErrorListener jsonErrorListener;
 
     public CardFinder(Context context)
     {
         this.applicationContext = context;
+
+        jsonListener = new Response.Listener<JSONArray>()
+        {
+            @Override
+            public void onResponse(JSONArray response)
+            {
+                try
+                {
+                    Log.i("Cardfinder","CardName "+response.getJSONObject(0).getString("name"));
+                }
+                catch (Exception e)
+                {
+                    e.printStackTrace();
+                    Log.e("Cardfinder",e.toString());
+                }
+
+                Log.i("Volley", "Response ");
+            }
+        };
+
+        jsonErrorListener = new Response.ErrorListener()
+        {
+            @Override
+            public void onErrorResponse(VolleyError error)
+            {
+
+            }
+        };
     }
 
     public void getCardInfo(String cardName)
@@ -55,34 +86,7 @@ public class CardFinder
         String url = "https://api.deckbrew.com/mtg/cards?name="+cardName;
         RequestQueue queue = Volley.newRequestQueue(applicationContext);
 
-        StringRequest request =  new StringRequest(Request.Method.GET, url, new Response.Listener<String>()
-        {
-            @Override
-            public void onResponse(String response)
-            {
-                try
-                {
-                    JSONArray array = new JSONArray(response);
-                    Log.i("Cardfinder","CardName "+array.getJSONObject(0).getString("name"));
-                }
-                catch (Exception e)
-                {
-                    e.printStackTrace();
-                    Log.e("Cardfinder",e.toString());
-                }
-
-                Log.i("Volley", "Response ");
-            }
-        },
-        new Response.ErrorListener()
-        {
-            @Override
-            public void onErrorResponse(VolleyError error)
-            {
-                Log.i("Volley","Volley error " + error);
-            }
-        }
-        );
+        JsonArrayRequest request = new JsonArrayRequest(url, jsonListener, jsonErrorListener);
 
         queue.add(request);
     }
