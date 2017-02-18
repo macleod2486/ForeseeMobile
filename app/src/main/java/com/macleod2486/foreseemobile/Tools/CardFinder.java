@@ -18,30 +18,35 @@
 
 package com.macleod2486.foreseemobile.Tools;
 
-import android.content.Context;
+import android.app.Activity;
 import android.util.Log;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 
-import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
-import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 
 import org.json.JSONArray;
 
 import java.net.URLEncoder;
+import java.util.ArrayList;
 
 public class CardFinder
 {
-    Context applicationContext;
+    Activity appActivity;
+
     Response.Listener<JSONArray> jsonListener;
     Response.ErrorListener jsonErrorListener;
 
-    public CardFinder(Context context)
+    ArrayList<String> cardList;
+
+    public CardFinder(final Activity activity, final ListView cardListView)
     {
-        this.applicationContext = context;
+        this.appActivity = activity;
+        cardList = new ArrayList<String>();
 
         jsonListener = new Response.Listener<JSONArray>()
         {
@@ -51,6 +56,14 @@ public class CardFinder
                 try
                 {
                     Log.i("Cardfinder","CardName "+response.getJSONObject(0).getString("name"));
+
+                    for(int index = 0; index < response.length(); index++)
+                    {
+                        cardList.add(index,response.getJSONObject(index).getString("name"));
+                    }
+
+                    cardListView.setAdapter(new ArrayAdapter(appActivity,android.R.layout.simple_list_item_1, cardList));
+
                 }
                 catch (Exception e)
                 {
@@ -84,7 +97,7 @@ public class CardFinder
         }
 
         String url = "https://api.deckbrew.com/mtg/cards?name="+cardName;
-        RequestQueue queue = Volley.newRequestQueue(applicationContext);
+        RequestQueue queue = Volley.newRequestQueue(appActivity.getApplicationContext());
 
         JsonArrayRequest request = new JsonArrayRequest(url, jsonListener, jsonErrorListener);
 

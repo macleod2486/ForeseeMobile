@@ -27,4 +27,13 @@ android:layout_height="match_parent">
         android:layout_marginLeft="14dp"
         android:layout_marginStart="14dp"
         android:id="@+id/searchButton" />
+
+    <ListView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/searchButton"
+        android:layout_toStartOf="@+id/searchButton"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:id="@+id/cardList" />
 </RelativeLayout>

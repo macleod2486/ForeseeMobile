@@ -25,6 +25,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.macleod2486.foreseemobile.R;
@@ -34,6 +35,7 @@ public class Main extends Fragment
 {
     private Button searchButton;
     private TextView searchText;
+    private ListView cardList;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
@@ -52,6 +54,8 @@ public class Main extends Fragment
             }
         });
 
+        cardList = (ListView)view.findViewById(R.id.cardList);
+
         return view;
     }
 
@@ -66,8 +70,7 @@ public class Main extends Fragment
         //Do a search for the card.
         Log.i("Main","Entered: "+text);
 
-        CardFinder finder = new CardFinder(getContext());
+        CardFinder finder = new CardFinder(getActivity(), cardList);
         finder.getCardInfo(text);
-
     }
 }
