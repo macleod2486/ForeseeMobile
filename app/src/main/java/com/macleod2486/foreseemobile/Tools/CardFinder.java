@@ -30,6 +30,7 @@ import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.Volley;
 
 import org.json.JSONArray;
+import org.json.JSONObject;
 
 import java.net.URLEncoder;
 import java.util.ArrayList;
@@ -57,9 +58,38 @@ public class CardFinder
                 {
                     Log.i("Cardfinder","CardName "+response.getJSONObject(0).getString("name"));
 
+                    String cardName = "";
+                    JSONObject card;
+                    JSONArray editionArray;
+                    String editions = "";
+
                     for(int index = 0; index < response.length(); index++)
                     {
-                        cardList.add(index,response.getJSONObject(index).getString("name"));
+                        card = response.getJSONObject(index);
+
+                        cardName = card.getString("name");
+                        Log.i("CardFinder","Card complete: "+card.toString());
+                        if(card.has("editions"))
+                        {
+                            Log.i("CardFinder","Edition exists");
+                            editionArray = card.getJSONArray("editions");
+                            editions = "\nEditions: ";
+                            for(int secondIndex = 0; secondIndex < editionArray.length(); secondIndex++)
+                            {
+                                if(editionArray.length() > 1)
+                                {
+                                    editions += editionArray.getJSONObject(secondIndex).getString("set") + ", ";
+                                }
+                                else
+                                {
+                                    editions += editionArray.getJSONObject(secondIndex).getString("set") + "  ";
+                                }
+                            }
+                        }
+
+                        editions = editions.substring(0, editions.length()-2);
+
+                        cardList.add(index,cardName + " " + editions);
                     }
 
                     cardListView.setAdapter(new ArrayAdapter(appActivity,android.R.layout.simple_list_item_1, cardList));
