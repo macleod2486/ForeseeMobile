@@ -20,6 +20,8 @@ package com.macleod2486.foreseemobile.Tools;
 
 import android.app.Activity;
 import android.util.Log;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
@@ -27,27 +29,64 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
+import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.jsoup.nodes.Document;
+import org.jsoup.select.Elements;
 
 import java.net.URLEncoder;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class CardFinder
 {
     Activity appActivity;
 
     Response.Listener<JSONArray> jsonListener;
-    Response.ErrorListener jsonErrorListener;
+    Response.Listener<String> cardRequestListener;
+    Response.ErrorListener errorListener;
 
     ArrayList<String> cardList;
+    ListView.OnItemClickListener cardClick;
 
     public CardFinder(final Activity activity, final ListView cardListView)
     {
         this.appActivity = activity;
         cardList = new ArrayList<String>();
+
+        cardClick = new ListView.OnItemClickListener()
+        {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id)
+            {
+                String card = cardList.get(position).toString();
+                String cardName = card.substring(0, card.indexOf("\n"));
+                String cardSet = card.substring(card.indexOf(":")+2,card.length());
+                Log.i("Cardfinder","Picked " + cardName);
+                //Display popup to allow selection of set
+                showCard(cardName, cardSet);
+            }
+        };
+
+        cardRequestListener = new Response.Listener<String>()
+        {
+            @Override
+            public void onResponse(String response)
+            {
+                Document doc = new Document(response);
+                Elements priceGuide = doc.select(".priceGuidePricePointData");
+                Log.i("CardFinder",response);
+                for(int index = 0; index < priceGuide.size(); index++)
+                {
+                    Log.i("CardFinder","Selected "+priceGuide.get(index).toString());
+                }
+
+            }
+        };
 
         jsonListener = new Response.Listener<JSONArray>()
         {
@@ -92,6 +131,7 @@ public class CardFinder
                         cardList.add(index,cardName + " " + editions);
                     }
 
+                    cardListView.setOnItemClickListener(cardClick);
                     cardListView.setAdapter(new ArrayAdapter(appActivity,android.R.layout.simple_list_item_1, cardList));
 
                 }
@@ -105,7 +145,7 @@ public class CardFinder
             }
         };
 
-        jsonErrorListener = new Response.ErrorListener()
+        errorListener = new Response.ErrorListener()
         {
             @Override
             public void onErrorResponse(VolleyError error)
@@ -129,7 +169,30 @@ public class CardFinder
         String url = "https://api.deckbrew.com/mtg/cards?name="+cardName;
         RequestQueue queue = Volley.newRequestQueue(appActivity.getApplicationContext());
 
-        JsonArrayRequest request = new JsonArrayRequest(url, jsonListener, jsonErrorListener);
+        JsonArrayRequest request = new JsonArrayRequest(url, jsonListener, errorListener)
+        {
+            @Override
+            public Map<String, String> getHeaders()
+            {
+                Map<String, String> headers = new HashMap<String, String>();
+                headers.put("User-agent", "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:40.0) Gecko/20100101 Firefox/40.1");
+                return headers;
+            }
+        };;
+
+        queue.add(request);
+    }
+
+    private void showCard(String cardName, String set)
+    {
+        String url = "http://shop.tcgplayer.com/magic/";
+        set = set.replace("'","").replace(" ","-").toLowerCase();
+        cardName = cardName.replace("'","").replace(" ","-").toLowerCase();
+        url = url + set + "/" + cardName;
+
+        RequestQueue queue = Volley.newRequestQueue(appActivity.getApplicationContext());
+
+        StringRequest request = new StringRequest(url, cardRequestListener, errorListener);
 
         queue.add(request);
     }
