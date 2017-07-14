@@ -18,12 +18,16 @@
 
 package com.macleod2486.foreseemobile.Activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -40,6 +44,22 @@ public class MainActivity extends AppCompatActivity
     private Fragment main;
 
     private int index;
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu)
+    {
+        getMenuInflater().inflate(R.menu.main, menu);
+
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item)
+    {
+        Log.i("Main","Setting option chosen");
+        startActivity(new Intent(this, SettingsActivity.class));
+        return true;
+    }
 
     @Override
     public void onCreate(Bundle instance)

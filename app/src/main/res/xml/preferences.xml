@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <PreferenceCategory android:title="Foresee Api Configuration">
+        <EditTextPreference android:dialogTitle="URL" android:key="foreseeApiUrl" android:title="URL"></EditTextPreference>
+        <EditTextPreference android:key="foreseeApiUsername" android:title="Username"></EditTextPreference>
+        <EditTextPreference android:key="foreseeApiPassword" android:password="true" android:title="Password"></EditTextPreference>
+    </PreferenceCategory>
+</PreferenceScreen>
