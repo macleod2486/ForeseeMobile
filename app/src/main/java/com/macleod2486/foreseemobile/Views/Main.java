@@ -18,18 +18,23 @@
 
 package com.macleod2486.foreseemobile.Views;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import com.macleod2486.foreseemobile.R;
 import com.macleod2486.foreseemobile.Tools.CardFinder;
+
+import java.util.ArrayList;
 
 public class Main extends Fragment
 {
@@ -55,6 +60,38 @@ public class Main extends Fragment
         });
 
         cardList = (ListView)view.findViewById(R.id.cardList);
+        cardList.setOnItemClickListener(new AdapterView.OnItemClickListener()
+        {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id)
+            {
+
+                String itemText = parent.getItemAtPosition(position).toString();
+                String [] editionsList = itemText.split("Editions:");
+                editionsList = editionsList[1].split(",");
+
+                final ArrayList<String> editionsDisplayList = new ArrayList<String>();
+
+                for(int index = 0; index < editionsList.length; index++)
+                {
+                    editionsDisplayList.add(editionsList[index]);
+                }
+
+                final CharSequence[] editionsDisplay = editionsDisplayList.toArray(new CharSequence[editionsDisplayList.size()]);
+
+                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                builder.setTitle("Editions");
+                builder.setItems(editionsDisplay, new DialogInterface.OnClickListener()
+                {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which)
+                    {
+                        Log.i("Alert","Item selected "+editionsDisplayList.get(which));
+                    }
+                });
+                builder.show();
+            }
+        });
 
         return view;
     }
