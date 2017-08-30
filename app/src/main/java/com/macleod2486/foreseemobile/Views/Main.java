@@ -68,7 +68,10 @@ public class Main extends Fragment
 
                 String itemText = parent.getItemAtPosition(position).toString();
                 String [] editionsList = itemText.split("Editions:");
+                String cardName = editionsList[0];
                 editionsList = editionsList[1].split(",");
+
+                Log.i("Alert",cardName);
 
                 final ArrayList<String> editionsDisplayList = new ArrayList<String>();
 
@@ -87,6 +90,7 @@ public class Main extends Fragment
                     public void onClick(DialogInterface dialog, int which)
                     {
                         Log.i("Alert","Item selected "+editionsDisplayList.get(which));
+                        //Make call to retrieve price data and display
                     }
                 });
                 builder.show();
