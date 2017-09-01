@@ -19,6 +19,8 @@
 package com.macleod2486.foreseemobile.Tools;
 
 import android.app.Activity;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
@@ -56,40 +58,19 @@ public class CardFinder
             {
                 try
                 {
-                    Log.i("Cardfinder","CardName "+response.getJSONObject(0).getString("name"));
-
                     String cardName = "";
-                    JSONObject card;
-                    JSONArray editionArray;
                     String editions = "";
+                    String average = "";
+                    String price = "";
 
                     for(int index = 0; index < response.length(); index++)
                     {
-                        card = response.getJSONObject(index);
+                        cardName = response.getJSONObject(index).getString("nameOfCard")+"\n";
+                        editions = "Editions: "+response.getJSONObject(index).getString("set")+"\n";
+                        average = "Average: $"+response.getJSONObject(index).getString("average")+"\n";
+                        price = "Price: $"+response.getJSONObject(index).getString("price");
 
-                        cardName = card.getString("name");
-                        Log.i("CardFinder","Card complete: "+card.toString());
-                        if(card.has("editions"))
-                        {
-                            Log.i("CardFinder","Edition exists");
-                            editionArray = card.getJSONArray("editions");
-                            editions = "\nEditions: ";
-                            for(int secondIndex = 0; secondIndex < editionArray.length(); secondIndex++)
-                            {
-                                if(editionArray.length() > 1)
-                                {
-                                    editions += editionArray.getJSONObject(secondIndex).getString("set") + ", ";
-                                }
-                                else
-                                {
-                                    editions += editionArray.getJSONObject(secondIndex).getString("set") + "  ";
-                                }
-                            }
-                        }
-
-                        editions = editions.substring(0, editions.length()-2);
-
-                        cardList.add(index,cardName + " " + editions);
+                        cardList.add(index,cardName + editions + average + price);
                     }
 
                     cardListView.setAdapter(new ArrayAdapter(appActivity,android.R.layout.simple_list_item_1, cardList));
@@ -110,13 +91,15 @@ public class CardFinder
             @Override
             public void onErrorResponse(VolleyError error)
             {
-
+                Log.i("CardFinder", "Error "+error.getMessage());
             }
         };
     }
 
     public void getCardInfo(String cardName)
     {
+        SharedPreferences preference = PreferenceManager.getDefaultSharedPreferences(appActivity);
+
         try
         {
             cardName = URLEncoder.encode(cardName, "UTF-8");
@@ -126,7 +109,12 @@ public class CardFinder
             e.printStackTrace();
         }
 
-        String url = "https://api.deckbrew.com/mtg/cards?name="+cardName;
+        String baseurl = preference.getString("foreseeApiUrl","");
+        String username = preference.getString("foreseeApiUsername","");
+        String password = preference.getString("foreseeApiPassword","");
+
+        String url = baseurl+"/search?source=MTGPrice&nameOfCard="+cardName+"&username="+username+"&password="+password;
+
         RequestQueue queue = Volley.newRequestQueue(appActivity.getApplicationContext());
 
         JsonArrayRequest request = new JsonArrayRequest(url, jsonListener, jsonErrorListener);

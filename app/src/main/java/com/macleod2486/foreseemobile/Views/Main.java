@@ -22,6 +22,7 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -60,42 +61,6 @@ public class Main extends Fragment
         });
 
         cardList = (ListView)view.findViewById(R.id.cardList);
-        cardList.setOnItemClickListener(new AdapterView.OnItemClickListener()
-        {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id)
-            {
-
-                String itemText = parent.getItemAtPosition(position).toString();
-                String [] editionsList = itemText.split("Editions:");
-                String cardName = editionsList[0];
-                editionsList = editionsList[1].split(",");
-
-                Log.i("Alert",cardName);
-
-                final ArrayList<String> editionsDisplayList = new ArrayList<String>();
-
-                for(int index = 0; index < editionsList.length; index++)
-                {
-                    editionsDisplayList.add(editionsList[index]);
-                }
-
-                final CharSequence[] editionsDisplay = editionsDisplayList.toArray(new CharSequence[editionsDisplayList.size()]);
-
-                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-                builder.setTitle("Editions");
-                builder.setItems(editionsDisplay, new DialogInterface.OnClickListener()
-                {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which)
-                    {
-                        Log.i("Alert","Item selected "+editionsDisplayList.get(which));
-                        //Make call to retrieve price data and display
-                    }
-                });
-                builder.show();
-            }
-        });
 
         return view;
     }
