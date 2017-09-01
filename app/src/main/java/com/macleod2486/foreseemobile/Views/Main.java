@@ -18,24 +18,18 @@
 
 package com.macleod2486.foreseemobile.Views;
 
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import com.macleod2486.foreseemobile.R;
 import com.macleod2486.foreseemobile.Tools.CardFinder;
-
-import java.util.ArrayList;
 
 public class Main extends Fragment
 {
