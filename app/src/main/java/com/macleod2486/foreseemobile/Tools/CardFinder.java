@@ -24,6 +24,7 @@ import android.preference.PreferenceManager;
 import android.util.Log;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -55,6 +56,12 @@ public class CardFinder
             @Override
             public void onResponse(JSONArray response)
             {
+                if(response.length() == 0)
+                {
+                    Toast errorMessage = Toast.makeText(appActivity.getApplicationContext(), "None found", Toast.LENGTH_LONG);
+                    errorMessage.show();
+                }
+
                 try
                 {
                     String cardName = "";
@@ -91,6 +98,9 @@ public class CardFinder
             public void onErrorResponse(VolleyError error)
             {
                 Log.i("CardFinder", "Error "+error.getMessage());
+
+                Toast errorMessage = Toast.makeText(appActivity.getApplicationContext(), error.getLocalizedMessage(), Toast.LENGTH_LONG);
+                errorMessage.show();
             }
         };
     }
