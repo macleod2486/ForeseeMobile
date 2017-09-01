@@ -4,5 +4,6 @@
         <EditTextPreference android:dialogTitle="URL" android:key="foreseeApiUrl" android:title="URL"></EditTextPreference>
         <EditTextPreference android:key="foreseeApiUsername" android:title="Username"></EditTextPreference>
         <EditTextPreference android:key="foreseeApiPassword" android:password="true" android:title="Password"></EditTextPreference>
+        <EditTextPreference android:dialogTitle="Source" android:key="foreseeApiSource" android:title="Source"></EditTextPreference>
     </PreferenceCategory>
 </PreferenceScreen>

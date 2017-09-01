@@ -111,8 +111,9 @@ public class CardFinder
         String baseurl = preference.getString("foreseeApiUrl","");
         String username = preference.getString("foreseeApiUsername","");
         String password = preference.getString("foreseeApiPassword","");
+        String source = preference.getString("foreseeApiSource","");
 
-        String url = baseurl+"/search?source=MTGPrice&nameOfCard="+cardName+"&username="+username+"&password="+password;
+        String url = baseurl+"/search?source="+source+"&nameOfCard="+cardName+"&username="+username+"&password="+password;
 
         RequestQueue queue = Volley.newRequestQueue(appActivity.getApplicationContext());
 
